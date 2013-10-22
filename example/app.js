@@ -10,30 +10,59 @@ var win = Ti.UI.createWindow({
 });
 
 var albumButton = Ti.UI.createButton({
-	top: "100dp",
-	height: "100dp",
+	top: "50dp",
+	height: "70dp",
 	width: "200dp",
 	title: "album",
 });
 win.add(albumButton);
 
 albumButton.addEventListener("click", function() {
-	var albumWin = require("album").createWindow();
-	albumWin.open();
+	var newWin = require("album").createWindow();
+	newWin.open();
 });
 
 var photoButton1 = Ti.UI.createButton({
-	top: "250dp",
-	height: "100dp",
+	top: "150dp",
+	height: "70dp",
 	width: "200dp",
-	title: "photo",
+	title: "photo(Pagination)",
 });
 win.add(photoButton1);
 
 photoButton1.addEventListener("click", function() {
-	var albumWin = require("photo").createWindow();
-	albumWin.open();
+	var newWin = require("photo").createWindow();
+	newWin.open();
 });
+
+var photoButton2 = Ti.UI.createButton({
+	top: "250dp",
+	height: "70dp",
+	width: "200dp",
+	title: "photo(Date range)",
+});
+win.add(photoButton2);
+
+photoButton2.addEventListener("click", function() {
+	var newWin = require("photosByDate").createWindow();
+	newWin.open();
+});
+
+var photoButton3 = Ti.UI.createButton({
+	top: "350dp",
+	height: "70dp",
+	width: "200dp",
+	title: "photo(One Date)",
+});
+win.add(photoButton3);
+
+photoButton3.addEventListener("click", function() {
+	var newWin = require("photosByOneDate").createWindow();
+	newWin.open();
+});
+
+/*require('com.oxgcp.androidmediaquery').queryPhotosByDate("2013-08-26", "2013-08-30");*/
+/*require('com.oxgcp.androidmediaquery').queryPhotosByOneDate("2013-09-26");*/
 
 /*var photoButton2 = Ti.UI.createButton({
 	top: "350dp",

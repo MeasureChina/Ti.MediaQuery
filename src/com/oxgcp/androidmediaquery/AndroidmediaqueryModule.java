@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.ObjectOutputStream;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.lang.Math;
 
 import android.app.Activity;
@@ -162,7 +163,43 @@ public class AndroidmediaqueryModule extends KrollModule
 		if (offset == null) offset = 0;
 		if (limit == null) limit = 100;
 		
-		String where = MediaStore.Images.Media.SIZE + " > 0"; //  The size of the file in bytes가 0 이상인 경우만 query
+		String where = MediaStore.Images.Media.SIZE + " > 0";//  The size of the file in bytes가 0 이상인 경우만 query
+		String orderBy = MediaStore.Images.Media.DATE_TAKEN + " DESC LIMIT " + String.valueOf(limit) + " OFFSET " + String.valueOf(offset);
+		
+		String[] projection = new String[] {
+			MediaStore.Images.Media.DATE_TAKEN,
+			MediaStore.Images.Media.BUCKET_ID,
+			MediaStore.Images.Media._ID,
+			MediaStore.Images.Media.DATA,
+			MediaStore.Images.Media.LATITUDE,
+			MediaStore.Images.Media.LONGITUDE,
+			MediaStore.Images.Media.SIZE,
+			MediaStore.Images.Media.DATE_ADDED,
+		};  
+		
+		Log.d(TAG, orderBy);
+		
+        // make managedQuery:
+		Activity activity = this.getActivity();
+		Cursor c = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, where, null, orderBy);
+		
+		Log.d(TAG, "Media.images query result count = " + c.getCount());
+        
+		return getPhotos(activity, c);
+	}
+	
+	// Methods
+	@Kroll.method
+	public KrollDict queryPhotosByAlbumId(String bucket_id, Integer offset, Integer limit) {
+		Log.d(TAG, "");
+		Log.d(TAG, "queryPhotosByAlbumId called: ");
+		
+		//
+		if (offset == null) offset = 0;
+		if (limit == null) limit = 100;
+		
+		String where = MediaStore.Images.Media.SIZE + " > 0 AND "
+		+ MediaStore.Images.Media.BUCKET_ID + " == " + bucket_id; //  The size of the file in bytes가 0 이상인 경우만 query
 		String orderBy = MediaStore.Images.Media.DATE_TAKEN + " DESC LIMIT " + String.valueOf(limit) + " OFFSET " + String.valueOf(offset);
 		
 		String[] projection = new String[] {
@@ -184,6 +221,76 @@ public class AndroidmediaqueryModule extends KrollModule
 		Log.d(TAG, "Media.images query result count = " + c.getCount());
         
 		return getPhotos(activity, c);
+	}
+	
+	@Kroll.method
+	public KrollDict queryPhotosByDate(String start, String end)
+	{
+		Log.d(TAG, "");
+		Log.d(TAG, "queryPhotosByDate called: ");
+		
+		SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
+		
+		try {
+			Date minDate = format.parse(start);
+			Date maxDate = format.parse(end);
+			
+			Log.d(TAG, "Start ~ end ::: ");
+			Log.d(TAG, "Start :: " + String.valueOf(minDate.getTime()));
+			Log.d(TAG, "End :: " + String.valueOf(maxDate.getTime()));
+			
+			String where = MediaStore.Images.Media.SIZE + " > 0 AND "
+			+ MediaStore.Images.Media.DATE_TAKEN + " >= " + String.valueOf(minDate.getTime()) 
+			+ " AND " + MediaStore.Images.Media.DATE_TAKEN + " < " + String.valueOf(maxDate.getTime()); 
+			
+			String orderBy = MediaStore.Images.Media.DATE_TAKEN + " DESC";
+
+			String[] projection = new String[] {
+				MediaStore.Images.Media.DATE_TAKEN,
+				MediaStore.Images.Media._ID,
+				MediaStore.Images.Media.DATA,
+				MediaStore.Images.Media.LATITUDE,
+				MediaStore.Images.Media.LONGITUDE,
+				MediaStore.Images.Media.SIZE,
+				MediaStore.Images.Media.DATE_ADDED,
+			};
+			
+			Activity activity = this.getActivity();
+			Cursor c = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, where, null, orderBy);
+			
+			Log.d(TAG, "Media.images query result count = " + c.getCount());
+
+			return getPhotos(activity, c);
+		}
+		catch (Exception e) {
+			Log.d(TAG, "Date format - ERROR");
+			Log.d(TAG, e.getMessage());
+			
+			return null;
+		}
+	}
+	
+	@Kroll.method
+	public KrollDict queryPhotosByOneDate(String date)
+	{
+		SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd");
+		
+		try {
+			Date minDate = dateFormat.parse(date);
+			Date maxDate = new Date(minDate.getTime() + (60 * 60 * 24 * 1000));
+			
+			Log.d(TAG, "date ::: ");
+			Log.d(TAG, "Start :: " + String.valueOf(minDate.getTime()));
+			Log.d(TAG, "End :: " + String.valueOf(maxDate.getTime()));
+			
+			return queryPhotosByDate(date, dateFormat.format(maxDate));
+		}
+		catch (Exception e) {
+			Log.d(TAG, "Date format - ERROR");
+			Log.d(TAG, e.getMessage());
+			
+			return null;
+		}
 	}
 	
 	public KrollDict getPhotos(Activity activity, Cursor c) {

@@ -13,7 +13,7 @@ function getPhotos(page, perPage) {
 		count += 1;
 		
 		var photo = photos[i];
-		console.log( "(" + i + ") " + (new Date(parseInt(photo.dateTaken))).toString());
+		console.log( "(" + i + ") " + (new Date(photo.dateTaken)).toString());
 
 		var row = Ti.UI.createTableViewRow({
 			width: Ti.UI.FILL,
@@ -27,7 +27,7 @@ function getPhotos(page, perPage) {
 		row.add(info);
 
 		var info1 = Ti.UI.createLabel({
-			text: "date - " + (new Date(parseInt(photo.dateTaken))).toString(),
+			text: "date - " + (new Date(photo.dateTaken)).toString(),
 			// text: "date - " + photo.dateTaken,
 		});
 		row.add(info1);

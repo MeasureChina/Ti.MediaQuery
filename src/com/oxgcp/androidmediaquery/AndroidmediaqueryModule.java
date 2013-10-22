@@ -106,14 +106,14 @@ public class AndroidmediaqueryModule extends KrollModule
 		
 		// formatting result
 		KrollDict result = new KrollDict(cur.getCount());
-		HashMap<String, String> obj = new HashMap<String, String>();
+		HashMap<String, Object> obj = new HashMap<String, Object>();
 
 		if (cur.moveToFirst()) {
 			String id;
 			String image_id;
 			String bucket_id;
 			String bucket;
-			String date;
+			Long date;
 			
 			int idColumn = cur.getColumnIndex(MediaStore.Images.Media._ID);
 			int bucketIdColumn = cur.getColumnIndex(MediaStore.Images.Media.BUCKET_ID);
@@ -126,7 +126,7 @@ public class AndroidmediaqueryModule extends KrollModule
 				id = cur.getString(idColumn);
 				bucket_id = cur.getString(bucketIdColumn);
 				bucket = cur.getString(bucketColumn);
-				date = cur.getString(dateColumn);
+				date = cur.getLong(dateColumn);
 				
 				// Do something with the values.
 				Log.d(TAG, id + " bucket_id=" + bucket_id + " bucket=" + bucket + "  date_taken=" + date);				
@@ -136,7 +136,7 @@ public class AndroidmediaqueryModule extends KrollModule
 				obj.put("dateTaken", date);
 				
 				// query thumbnail
-				String[] thumbnailInfo = getThumbnail(activity, id);
+				Object[] thumbnailInfo = getThumbnail(activity, id);
 				if (thumbnailInfo != null){
 					obj.put("thumbnail", thumbnailInfo[0]);
 					obj.put("thumbnail_width", thumbnailInfo[1]);
@@ -190,7 +190,7 @@ public class AndroidmediaqueryModule extends KrollModule
 		
 		// formatting result
 		KrollDict result = new KrollDict(c.getCount());
-		HashMap<String, String> obj = new HashMap<String, String>();
+		HashMap<String, Object> obj = new HashMap<String, Object>();
         
 		if (c.getCount() > 0) {
     		c.moveToFirst();
@@ -199,7 +199,7 @@ public class AndroidmediaqueryModule extends KrollModule
 				
 				String _id = c.getString(c.getColumnIndex(MediaStore.Images.Media._ID));
 				String path = c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA));
-				String dateTaken = c.getString(c.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
+				Long dateTaken = c.getLong(c.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
 				
 				// id, path, date_taken
 				obj.put("id", _id);
@@ -207,11 +207,11 @@ public class AndroidmediaqueryModule extends KrollModule
 				obj.put("size", c.getString(c.getColumnIndex(MediaStore.Images.Media.SIZE)));
 				obj.put("dateTaken", dateTaken);
 				// gps info
-				obj.put("lat", Float.toString(c.getFloat(c.getColumnIndex(MediaStore.Images.Media.LATITUDE))));
-				obj.put("lon", Float.toString(c.getFloat(c.getColumnIndex(MediaStore.Images.Media.LONGITUDE))));
+				obj.put("lat", c.getFloat(c.getColumnIndex(MediaStore.Images.Media.LATITUDE)));
+				obj.put("lon", c.getFloat(c.getColumnIndex(MediaStore.Images.Media.LONGITUDE)));
 				
 				// query thumbnail
-				String[] thumbnailInfo = getThumbnail(activity, _id);
+				Object[] thumbnailInfo = getThumbnail(activity, _id);
 				if (thumbnailInfo != null){
 					obj.put("thumbnail", thumbnailInfo[0]);
 					obj.put("thumbnail_width", thumbnailInfo[1]);
@@ -232,11 +232,11 @@ public class AndroidmediaqueryModule extends KrollModule
 					// gps location
 					float[] latlong = new float [] { 0.0f, 0.0f };
 					exif.getLatLong(latlong);
-					obj.put("exif_lat", Float.toString(latlong[0]));
-					obj.put("exif_lon", Float.toString(latlong[1]));
+					obj.put("exif_lat", latlong[0]);
+					obj.put("exif_lon", latlong[1]);
 					// orientation
 					int orientation = Integer.parseInt(exif.getAttribute("Orientation"));
-					obj.put("orientation", Integer.toString(orientation));
+					obj.put("orientation", orientation);
 					obj.put("rotate", (orientation == 6 || orientation == 8) ? "1" : "0");
 				}
 				catch (Exception e) {
@@ -256,7 +256,7 @@ public class AndroidmediaqueryModule extends KrollModule
 		return result;
 	}
 	
-	public String[] getThumbnail(Activity activity, String id) {
+	public Object[] getThumbnail(Activity activity, String id) {
 		
 		String[] projection2 = {
 			MediaStore.Images.Thumbnails.DATA,
@@ -275,10 +275,10 @@ public class AndroidmediaqueryModule extends KrollModule
 		cursor.moveToFirst();
 		
 		if (cursor.getCount() > 0) {
-			String[] thumbnailInfo = {
+			Object[] thumbnailInfo = {
 				cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.DATA)),
-				cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.WIDTH)),
-				cursor.getString(cursor.getColumnIndex(MediaStore.Images.Thumbnails.HEIGHT))
+				cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Thumbnails.WIDTH)),
+				cursor.getInt(cursor.getColumnIndex(MediaStore.Images.Thumbnails.HEIGHT))
 			};
 			
 			return thumbnailInfo;

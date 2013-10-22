@@ -15,6 +15,7 @@ import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiBlob;
+import org.appcelerator.titanium.util.TiConvert;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -242,73 +243,56 @@ public class MediaqueryModule extends KrollModule
 	}
 	
 	@Kroll.method
-	public KrollDict queryPhotosByDate(String start, String end)
+	public KrollDict queryPhotosByDate(Object start, Object end)
 	{
 		Log.d(TAG, "");
 		Log.d(TAG, "queryPhotosByDate called: ");
-		
-		SimpleDateFormat format = new java.text.SimpleDateFormat("yyyy-MM-dd");
-		
-		try {
-			Date minDate = format.parse(start);
-			Date maxDate = format.parse(end);
-			
-			Log.d(TAG, "Start ~ end ::: ");
-			Log.d(TAG, "Start :: " + String.valueOf(minDate.getTime()));
-			Log.d(TAG, "End :: " + String.valueOf(maxDate.getTime()));
-			
-			String where = MediaStore.Images.Media.SIZE + " > 0 AND "
-			+ MediaStore.Images.Media.DATE_TAKEN + " >= " + String.valueOf(minDate.getTime()) 
-			+ " AND " + MediaStore.Images.Media.DATE_TAKEN + " < " + String.valueOf(maxDate.getTime()); 
-			
-			String orderBy = MediaStore.Images.Media.DATE_TAKEN + " DESC";
 
-			String[] projection = new String[] {
-				MediaStore.Images.Media.DATE_TAKEN,
-				MediaStore.Images.Media._ID,
-				MediaStore.Images.Media.DATA,
-				MediaStore.Images.Media.LATITUDE,
-				MediaStore.Images.Media.LONGITUDE,
-				MediaStore.Images.Media.SIZE,
-				MediaStore.Images.Media.DATE_ADDED,
-			};
-			
-			Activity activity = this.getActivity();
-			Cursor c = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, where, null, orderBy);
-			
-			Log.d(TAG, "Media.images query result count = " + c.getCount());
+		Date minDate = TiConvert.toDate(start);
+		Date maxDate = TiConvert.toDate(end);
+		
+		Log.d(TAG, "Start ~ end ::: ");
+		Log.d(TAG, "Start :: " + String.valueOf(minDate.getTime()));
+		Log.d(TAG, "End :: " + String.valueOf(maxDate.getTime()));
+		
+		String where = MediaStore.Images.Media.SIZE + " > 0 AND "
+		+ MediaStore.Images.Media.DATE_TAKEN + " >= " + String.valueOf(minDate.getTime()) 
+		+ " AND " + MediaStore.Images.Media.DATE_TAKEN + " < " + String.valueOf(maxDate.getTime()); 
+		
+		String orderBy = MediaStore.Images.Media.DATE_TAKEN + " DESC";
 
-			return getPhotos(activity, c);
-		}
-		catch (Exception e) {
-			Log.d(TAG, "Date format - ERROR");
-			Log.d(TAG, e.getMessage());
-			
-			return null;
-		}
+		String[] projection = new String[] {
+			MediaStore.Images.Media.DATE_TAKEN,
+			MediaStore.Images.Media._ID,
+			MediaStore.Images.Media.DATA,
+			MediaStore.Images.Media.LATITUDE,
+			MediaStore.Images.Media.LONGITUDE,
+			MediaStore.Images.Media.SIZE,
+			MediaStore.Images.Media.DATE_ADDED,
+		};
+		
+		Activity activity = this.getActivity();
+		Cursor c = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, where, null, orderBy);
+		
+		Log.d(TAG, "Media.images query result count = " + c.getCount());
+
+		return getPhotos(activity, c);
 	}
 	
 	@Kroll.method
-	public KrollDict queryPhotosByOneDate(String date)
+	public KrollDict queryPhotosByOneDate(Object date)
 	{
-		SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy-MM-dd");
+		Log.d(TAG, "");
+		Log.d(TAG, "queryPhotosByOneDate called: ");
+
+		Date minDate = TiConvert.toDate(date);
+		Date maxDate = new Date(minDate.getTime() + (60 * 60 * 24 * 1000));
 		
-		try {
-			Date minDate = dateFormat.parse(date);
-			Date maxDate = new Date(minDate.getTime() + (60 * 60 * 24 * 1000));
-			
-			Log.d(TAG, "date ::: ");
-			Log.d(TAG, "Start :: " + String.valueOf(minDate.getTime()));
-			Log.d(TAG, "End :: " + String.valueOf(maxDate.getTime()));
-			
-			return queryPhotosByDate(date, dateFormat.format(maxDate));
-		}
-		catch (Exception e) {
-			Log.d(TAG, "Date format - ERROR");
-			Log.d(TAG, e.getMessage());
-			
-			return null;
-		}
+		Log.d(TAG, "date ::: ");
+		Log.d(TAG, "Start :: " + String.valueOf(minDate.getTime()));
+		Log.d(TAG, "End :: " + String.valueOf(maxDate.getTime()));
+		
+		return queryPhotosByDate(date, maxDate);
 	}
 	
 	public KrollDict getPhotos(Activity activity, Cursor c) {

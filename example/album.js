@@ -57,7 +57,7 @@ function getPhotos(e) {
 		
 		var title = Ti.UI.createLabel({
 			left: "85dp",
-			text: album.name,
+			text: album.name + " (" + album.photos_count + ")",
 			font: {fontSize: "15dp", fontWeight: "bold"},
 			color: "#000",
 		});

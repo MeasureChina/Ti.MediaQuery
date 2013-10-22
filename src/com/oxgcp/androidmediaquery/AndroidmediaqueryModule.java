@@ -93,6 +93,11 @@ public class AndroidmediaqueryModule extends KrollModule
 			MediaStore.Images.Thumbnails.KIND,
 		};
 		
+		String[] projection3 = new String[]{
+			MediaStore.Images.Media.BUCKET_ID,
+			MediaStore.Images.Media.SIZE,
+		};
+		
 		// String orderBy = MediaStore.Images.Media.DATE_TAKEN + " DESC LIMIT " + String.valueOf(limit) + " OFFSET " + String.valueOf(offset);
 
 		// Make the query.
@@ -115,6 +120,7 @@ public class AndroidmediaqueryModule extends KrollModule
 			String bucket_id;
 			String bucket;
 			Long date;
+			int count;
 			
 			int idColumn = cur.getColumnIndex(MediaStore.Images.Media._ID);
 			int bucketIdColumn = cur.getColumnIndex(MediaStore.Images.Media.BUCKET_ID);
@@ -129,12 +135,22 @@ public class AndroidmediaqueryModule extends KrollModule
 				bucket = cur.getString(bucketColumn);
 				date = cur.getLong(dateColumn);
 				
+				Cursor cursorForCountPhoto = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, 
+					projection3, 
+					MediaStore.Images.Media.BUCKET_ID + " IS NOT NULL AND " + MediaStore.Images.Media.BUCKET_ID + " == " + bucket_id + " AND " + MediaStore.Images.Media.SIZE + " > 0", 
+					null, 
+					"");
+				
+				count = cursorForCountPhoto.getCount();
+				cursorForCountPhoto.close();
+				
 				// Do something with the values.
 				Log.d(TAG, id + " bucket_id=" + bucket_id + " bucket=" + bucket + "  date_taken=" + date);				
 				// id, path, date_taken
 				obj.put("id", bucket_id);
 				obj.put("name", bucket);
 				obj.put("dateTaken", date);
+				obj.put("photos_count", count);
 				
 				// query thumbnail
 				Object[] thumbnailInfo = getThumbnail(activity, id);
@@ -148,6 +164,8 @@ public class AndroidmediaqueryModule extends KrollModule
 				
 			} while (cur.moveToNext());
 		}
+		
+		cur.close();
 		
 		return result;
 	}

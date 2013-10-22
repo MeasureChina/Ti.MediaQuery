@@ -10,7 +10,7 @@ function openPhotosByAlbum(e) {
 
 function getPhotos(e) {
 	
-	var AndroidMediaQuery = require('com.oxgcp.androidmediaquery');
+	var AndroidMediaQuery = require('com.tripvi.mediaquery');
 	var win = e.source;
 
 	var table = Ti.UI.createTableView();

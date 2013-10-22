@@ -1,4 +1,4 @@
-<project name="androidmediaquery" default="dist">
+<project name="mediaquery" default="dist">
 	<description>
 		Ant build script for Titanium Android module AndroidMediaQuery
 	</description>

@@ -6,7 +6,7 @@
  * Please see the LICENSE included with this distribution for details.
  *
  */
-package com.oxgcp.androidmediaquery;
+package com.tripvi.mediaquery;
 
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
@@ -48,17 +48,17 @@ import android.os.Environment;
 
 
 
-@Kroll.module(name="Androidmediaquery", id="com.oxgcp.androidmediaquery")
-public class AndroidmediaqueryModule extends KrollModule
+@Kroll.module(name="Mediaquery", id="com.tripvi.mediaquery")
+public class MediaqueryModule extends KrollModule
 {
 
 	// Standard Debugging variables
-	private static final String TAG = "AndroidmediaqueryModule";
+	private static final String TAG = "MediaqueryModule";
 
 	// You can define constants with @Kroll.constant, for example:
 	// @Kroll.constant public static final String EXTERNAL_NAME = value;
 	
-	public AndroidmediaqueryModule()
+	public MediaqueryModule()
 	{
 		super();
 	}

@@ -2,7 +2,7 @@
 
 function getPhotos(page, perPage) {
 	
-	var AndroidMediaQuery = require('com.oxgcp.androidmediaquery');
+	var AndroidMediaQuery = require('com.tripvi.mediaquery');
 	
 	var photos = AndroidMediaQuery.queryPhotos((page * perPage), perPage); // offset, limit
 	var rows = [];

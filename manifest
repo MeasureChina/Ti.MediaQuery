@@ -11,8 +11,8 @@ copyright: tripvi inc.
 
 
 # these should not be edited
-name: AndroidMediaQuery
-moduleid: com.oxgcp.androidmediaquery
+name: MediaQuery
+moduleid: com.tripvi.mediaquery
 guid: e0a7b596-2f32-4c12-8034-563b760d2d8c
 platform: android
 minsdk: 3.1.0.GA

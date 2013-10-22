@@ -61,8 +61,8 @@ photoButton3.addEventListener("click", function() {
 	newWin.open();
 });
 
-/*require('com.oxgcp.androidmediaquery').queryPhotosByDate("2013-08-26", "2013-08-30");*/
-/*require('com.oxgcp.androidmediaquery').queryPhotosByOneDate("2013-09-26");*/
+/*require('com.tripvi.mediaquery').queryPhotosByDate("2013-08-26", "2013-08-30");*/
+/*require('com.tripvi.mediaquery').queryPhotosByOneDate("2013-09-26");*/
 
 /*var photoButton2 = Ti.UI.createButton({
 	top: "350dp",

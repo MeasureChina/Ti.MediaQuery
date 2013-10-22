@@ -8,7 +8,7 @@ TODO: Enter your module description here
 
 To access this module from JavaScript, you would do the following:
 
-	var AndroidMediaQuery = require("com.oxgcp.androidmediaquery");
+	var AndroidMediaQuery = require("com.tripvi.mediaquery");
 
 The AndroidMediaQuery variable is a reference to the Module object.	
 

@@ -194,6 +194,8 @@ public class MediaqueryModule extends KrollModule
 			MediaStore.Images.Media.LONGITUDE,
 			MediaStore.Images.Media.SIZE,
 			MediaStore.Images.Media.DATE_ADDED,
+			MediaStore.Images.Media.BUCKET_ID,
+			MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
 		};  
 		
 		Log.d(TAG, orderBy);
@@ -229,6 +231,8 @@ public class MediaqueryModule extends KrollModule
 			MediaStore.Images.Media.LONGITUDE,
 			MediaStore.Images.Media.SIZE,
 			MediaStore.Images.Media.DATE_ADDED,
+			MediaStore.Images.Media.BUCKET_ID,
+			MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
 		};  
 		
 		Log.d(TAG, orderBy);
@@ -269,6 +273,8 @@ public class MediaqueryModule extends KrollModule
 			MediaStore.Images.Media.LONGITUDE,
 			MediaStore.Images.Media.SIZE,
 			MediaStore.Images.Media.DATE_ADDED,
+			MediaStore.Images.Media.BUCKET_ID,
+			MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
 		};
 		
 		Activity activity = this.getActivity();
@@ -315,6 +321,9 @@ public class MediaqueryModule extends KrollModule
 				obj.put("path", path);
 				obj.put("size", c.getString(c.getColumnIndex(MediaStore.Images.Media.SIZE)));
 				obj.put("dateTaken", dateTaken);
+				// album info
+				obj.put("album_id", c.getString(c.getColumnIndex(MediaStore.Images.Media.BUCKET_ID)));
+				obj.put("album_name", c.getString(c.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)));
 				// gps info
 				obj.put("lat", c.getFloat(c.getColumnIndex(MediaStore.Images.Media.LATITUDE)));
 				obj.put("lon", c.getFloat(c.getColumnIndex(MediaStore.Images.Media.LONGITUDE)));

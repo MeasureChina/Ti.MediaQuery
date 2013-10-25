@@ -81,9 +81,9 @@ public class MediaqueryModule extends KrollModule
 		// which image properties are we querying
 		String[] projection = new String[]{
 			"DISTINCT " + MediaStore.Images.Media.BUCKET_ID,
+			MediaStore.Images.Media.DATE_TAKEN,
 			MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
 			MediaStore.Images.Media._ID,
-			MediaStore.Images.Media.DATE_TAKEN,
 		};
 		
 		String[] projection2 = {
@@ -99,15 +99,15 @@ public class MediaqueryModule extends KrollModule
 			MediaStore.Images.Media.SIZE,
 		};
 		
-		// String orderBy = MediaStore.Images.Media.DATE_TAKEN + " DESC LIMIT " + String.valueOf(limit) + " OFFSET " + String.valueOf(offset);
-
+		String orderBy = MediaStore.Images.Media.DATE_TAKEN + " DESC";
+		
 		// Make the query.
 		Activity activity = this.getActivity();
 		Cursor cur = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, 
 			projection, 
 			MediaStore.Images.Media.BUCKET_ID + " IS NOT NULL) GROUP BY (" + MediaStore.Images.Media.BUCKET_ID, 
 			null, 
-			"");
+			orderBy);
 
 		Log.d(TAG," query count="+cur.getCount());
 		
@@ -128,7 +128,8 @@ public class MediaqueryModule extends KrollModule
 			int bucketColumn = cur.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
 			int dateColumn = cur.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN);
 			int thumbMagicColumn = cur.getColumnIndex(MediaStore.Images.Media.MINI_THUMB_MAGIC);
-
+			
+			int order = 0;
 			do {
 				// Get the field values
 				id = cur.getString(idColumn);
@@ -161,8 +162,8 @@ public class MediaqueryModule extends KrollModule
 					obj.put("thumbnail_height", thumbnailInfo[2]);
 				}
 				
-				result.put(id, new KrollDict(obj)); //add the item
-				
+				result.put(String.valueOf(order), new KrollDict(obj)); //add the item
+				order++;
 			} while (cur.moveToNext());
 		}
 		

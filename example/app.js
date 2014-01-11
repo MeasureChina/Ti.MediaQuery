@@ -11,7 +11,7 @@ var win = Ti.UI.createWindow({
 
 var albumButton = Ti.UI.createButton({
 	top: "50dp",
-	height: "70dp",
+	height: "50dp",
 	width: "200dp",
 	title: "album",
 });
@@ -23,8 +23,8 @@ albumButton.addEventListener("click", function() {
 });
 
 var photoButton1 = Ti.UI.createButton({
-	top: "150dp",
-	height: "70dp",
+	top: "120dp",
+	height: "50dp",
 	width: "200dp",
 	title: "photo(Pagination)",
 });
@@ -36,8 +36,8 @@ photoButton1.addEventListener("click", function() {
 });
 
 var photoButton2 = Ti.UI.createButton({
-	top: "250dp",
-	height: "70dp",
+	top: "190dp",
+	height: "50dp",
 	width: "200dp",
 	title: "photo(Date range)",
 });
@@ -49,8 +49,8 @@ photoButton2.addEventListener("click", function() {
 });
 
 var photoButton3 = Ti.UI.createButton({
-	top: "350dp",
-	height: "70dp",
+	top: "260dp",
+	height: "50dp",
 	width: "200dp",
 	title: "photo(One Date)",
 });
@@ -61,22 +61,18 @@ photoButton3.addEventListener("click", function() {
 	newWin.open();
 });
 
-/*require('com.tripvi.mediaquery').queryPhotosByDate("2013-08-26", "2013-08-30");*/
-/*require('com.tripvi.mediaquery').queryPhotosByOneDate("2013-09-26");*/
-
-/*var photoButton2 = Ti.UI.createButton({
-	top: "350dp",
-	height: "100dp",
+var videoButton = Ti.UI.createButton({
+	top: "310dp",
+	height: "50dp",
 	width: "200dp",
-	title: "photo(getThumbnail)",
+	title: "video",
 });
-win.add(photoButton2);
+win.add(videoButton);
 
-photoButton2.addEventListener("click", function() {
-	var albumWin = require("photo").createWindow({mode: "getThumbnail"});
-	albumWin.open();
-});*/
-
+videoButton.addEventListener("click", function() {
+	var newWin = require("video").createWindow();
+	newWin.open();
+});
 
 
 win.open();

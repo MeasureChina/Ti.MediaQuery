@@ -2,12 +2,12 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 1.1.0
+version: 1.2.0
 apiversion: 3
-description: query images in the media library with tag parsing
+description: query images and videos in the media library with exif tag parsing
 author: metacortex, vagrantinoz
 license: MIT
-copyright: tripvi inc.
+copyright: Tripvi inc.
 
 
 # these should not be edited
@@ -15,4 +15,4 @@ name: MediaQuery
 moduleid: com.tripvi.mediaquery
 guid: e0a7b596-2f32-4c12-8034-563b760d2d8c
 platform: android
-minsdk: 3.1.0.GA
+minsdk: 3.2.0.GA

@@ -327,7 +327,7 @@ public class MediaqueryModule extends KrollModule
 				obj.put("album_name", c.getString(c.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)));
 				// gps info
 				obj.put("lat", c.getFloat(c.getColumnIndex(MediaStore.Images.Media.LATITUDE)));
-				obj.put("lon", c.getFloat(c.getColumnIndex(MediaStore.Images.Media.LONGITUDE)));
+				obj.put("lng", c.getFloat(c.getColumnIndex(MediaStore.Images.Media.LONGITUDE)));
 				
 				// query thumbnail
 				Object[] thumbnailInfo = getThumbnail(activity, _id);
@@ -352,7 +352,7 @@ public class MediaqueryModule extends KrollModule
 					float[] latlong = new float [] { 0.0f, 0.0f };
 					exif.getLatLong(latlong);
 					obj.put("exif_lat", latlong[0]);
-					obj.put("exif_lon", latlong[1]);
+					obj.put("exif_lng", latlong[1]);
 					// orientation
 					int orientation = Integer.parseInt(exif.getAttribute("Orientation"));
 					obj.put("orientation", orientation);
@@ -410,214 +410,99 @@ public class MediaqueryModule extends KrollModule
 			
 			return getThumbnail(activity, id);
 		}
-	}	
+	}
 	
 	
-	
-	// @Kroll.method
-	// public TiBlob getThumbnail(Integer id, String fileName)
-	// {
-	// 	int orientation = 0;
-	// 	Matrix rotateMatrix = new Matrix();
-	// 	float degreeToRotate = 0.0f;
-	// 	
-	// 	try {
-	// 		ExifInterface exif = new ExifInterface(fileName);
-	// 		orientation = Integer.parseInt(exif.getAttribute("Orientation"));
-	// 
-	// 		if (orientation == 6) { // 90 degree
-	// 			degreeToRotate = 90.0f;
-	// 		}
-	// 		else if (orientation == 3) { // 180 degree
-	// 			degreeToRotate = 180.0f;
-	// 		}
-	// 		else if (orientation == 8) { // 270 degree
-	// 			degreeToRotate = 270.0f;
-	// 		}
-	// 		
-	// 		rotateMatrix.postRotate(degreeToRotate);
-	// 	}
-	// 	catch(Exception e) {
-	// 		Log.d(TAG, "Exif - ERROR");
-	// 		Log.d(TAG, e.getMessage());
-	// 	}
-	// 	
-	// 	// create thumbnail
-	// 	Activity activity = this.getActivity();
-	// 	Bitmap th = MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), id.intValue(), MediaStore.Images.Thumbnails.MICRO_KIND, null);
-	// 	if (th != null) {
-	// 		Bitmap rotated = Bitmap.createBitmap(th, 0, 0, th.getWidth(), th.getHeight(), rotateMatrix, false);
-	// 		
-	// 		TiBlob blob = TiBlob.blobFromImage(rotated);
-	// 		th.recycle();
-	// 		
-	// 		return blob;
-	// 	}
-	// 	
-	// 	Log.d(TAG, "MediaStore.Images.Thumbnails.getThumbnail() returns null:");
-	// 	return null;
-	// }
-	
-	// public static int calculateInSampleSize(int width, int reqWidth) {
-	// 	int inSampleSize = 1;
-	// 	
-	// 	if (width > reqWidth) {
-	// 
-	// 		final int widthRatio = Math.round((float) width / (float) reqWidth);
-	// 		inSampleSize = widthRatio;//heightRatio < widthRatio ? heightRatio : widthRatio;
-	// 	}
-	// 			
-	// 	return inSampleSize;
-	// }
-	// 
-	// public Bitmap decodeSampledBitmapFromResourceMemOpt(File f, int reqWidth) {
-	// 	try {
-	// 		final BitmapFactory.Options options = new BitmapFactory.Options();
-	// 		options.inJustDecodeBounds = true;
-	// 		BitmapFactory.decodeStream(new FileInputStream(f), null, options);
-	// 
-	// 		options.inSampleSize = calculateInSampleSize(options.outWidth, reqWidth); // width만 사용한다.
-	// 		options.inPurgeable = true;
-	// 		options.inInputShareable = true;
-	// 		options.inJustDecodeBounds = false;
-	// 		options.inPreferredConfig = Bitmap.Config.RGB_565; // ARGB_8888
-	// 		return BitmapFactory.decodeStream(new FileInputStream(f), null, options);
-	// 
-	// 	} catch (Exception e) {
-	// 		e.printStackTrace();
-	// 		return null;
-	// 	}
-	// }
-	// 			
-	// @Kroll.method
-	// public String createResizedImage(String fileName, Integer reqWidth)
-	// {	
-	// 	
-	// 	if (reqWidth == null || reqWidth == 0) {
-	// 		reqWidth = 640;
-	// 	}
-	// 	
-	// 	fileName = fileName.replaceFirst("file://", "");
-	// 	
-	// 	int orientation = 0;
-	// 	
-	// 	try {
-	// 		ExifInterface exif = new ExifInterface(fileName);
-	// 		orientation = Integer.parseInt(exif.getAttribute("Orientation"));
-	// 	} catch(Exception e) {
-	// 		Log.d(TAG, "ExifInterface - ERROR");
-	// 		Log.d(TAG, e.getMessage());
-	// 	}
-	// 	
-	// 	//
-	// 	Bitmap th = null;
-	// 	FileInputStream inputStream;
-	// 	File file = new File(fileName);
-	// 	
-	// 	try {
-	// 		th = decodeSampledBitmapFromResourceMemOpt(file, reqWidth);
-	// 	}
-	// 	catch (Exception e) {
-	// 		Log.d(TAG, "File Not Found");
-	// 		e.printStackTrace();
-	// 		return null;
-	// 	}
-	// 	
-	// 	// Orientation에 따라 사진 회전
-	// 	Matrix rotateMatrix = new Matrix();
-	// 	float degreeToRotate = 0.0f;
-	// 
-	// 	if (orientation == 6) { // 90 degree
-	// 		degreeToRotate = 90.0f;
-	// 	}
-	// 	else if (orientation == 3) { // 180 degree
-	// 		degreeToRotate = 180.0f;
-	// 	}
-	// 	else if (orientation == 8) { // 270 degree
-	// 		degreeToRotate = 270.0f;
-	// 	}
-	// 	
-	// 	rotateMatrix.postRotate(degreeToRotate);
-	// 	
-	// 	Bitmap rotated = Bitmap.createBitmap(th, 0, 0, th.getWidth(), th.getHeight(), rotateMatrix, true);
-	// 
-	// 	try {
-	// 		// mimetype을 지정하기 위함
-	// 		String cacheDir = this.getActivity().getCacheDir().getPath();
-	// 		Random random = new Random();
-	// 		int i = random.nextInt(9999);
-	// 
-	// 		// File에다 저장하고 FilePath를 리턴한다. 메모리이슈때문에.
-	// 		String ouputFileName = cacheDir + "_" + i + ".jpg";
-	// 		FileOutputStream stream = new FileOutputStream(ouputFileName);
-	// 		boolean compressed = rotated.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-	// 		stream.flush();
-	// 		stream.close();
-	// 		stream = null;
-	// 		
-	// 		if (compressed) {
-	// 			th.recycle();
-	// 			th = null;
-	// 			rotated.recycle();
-	// 			rotated = null;
-	// 			
-	// 			return ouputFileName;
-	// 		}
-	// 	}
-	// 	catch(Exception e) {
-	// 		Log.d(TAG, "ByteArrayOutputStream - ERROR");
-	// 		Log.d(TAG, e.getMessage());
-	// 	}
-	// 	
-	// 	return null;
-	// }
-	// 
-	// 
-	// @Kroll.method
-	// public TiBlob replaceMimeType(Object blob) {
-	// 	
-	// 	byte[] byteArray;
-	// 	Bitmap image;
-	// 	ByteArrayOutputStream outputStream = outputStream = new ByteArrayOutputStream();
-	// 	
-	// 	if (blob instanceof TiBlob) {
-	// 		
-	// 		TiBlob temp = (TiBlob) blob;
-	// 		
-	// 		InputStream inputStream = temp.getInputStream();
-	// 		image = BitmapFactory.decodeStream(inputStream);
-	// 		image.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-	// 		
-	// 		byteArray = outputStream.toByteArray();
-	// 		
-	// 		try{
-	// 			outputStream.close();
-	// 			outputStream = null;
-	// 
-	// 			inputStream.close();
-	// 			inputStream = null;
-	// 			
-	// 		} catch(Exception e) {
-	// 			Log.d(TAG, "Stream Close - ERROR");
-	// 			Log.d(TAG, e.getMessage());
-	// 
-	// 			outputStream = null;
-	// 			inputStream = null;
-	// 		}
-	// 		
-	// 	}
-	// 	else {
-	// 		
-	// 		Log.d(TAG, "not Matched type - ERROR");
-	// 		
-	// 		return null;
-	// 	}
-	// 	
-	// 	image.recycle();
-	// 	image = null;
-	// 	
-	// 	return TiBlob.blobFromData(byteArray, "image/jpeg");
-	// }
-	
+	/*
+	 * VIDEO는 album없이 그냥 전체목록을 가져와서 표시한다.
+	 *
+	 */
+	@Kroll.method
+	public KrollDict queryVideos(Integer offset, Integer limit) {
+		
+		Log.d(TAG, "");
+		Log.d(TAG, "queryVideos called: ");
+		
+		//
+		if (offset == null) offset = 0;
+		if (limit == null) limit = 100;
+		
+		String where = MediaStore.Video.VideoColumns.SIZE + " > 0";//  The size of the file in bytes가 0 이상인 경우만 query
+		String orderBy = MediaStore.Video.VideoColumns.DATE_TAKEN + " DESC LIMIT " + String.valueOf(limit) + " OFFSET " + String.valueOf(offset);
+		
+		String[] projection = new String[] {
+			MediaStore.Video.VideoColumns.DATE_TAKEN,
+			MediaStore.Video.VideoColumns.BUCKET_ID,
+	        MediaStore.Video.VideoColumns._ID,
+	        MediaStore.Video.VideoColumns.TITLE,
+	        MediaStore.Video.VideoColumns.ARTIST,
+			MediaStore.Video.VideoColumns.DATA,
+			MediaStore.Video.VideoColumns.LATITUDE,
+			MediaStore.Video.VideoColumns.LONGITUDE,
+			MediaStore.Video.VideoColumns.SIZE,
+			MediaStore.Video.VideoColumns.DATE_ADDED,
+			MediaStore.Video.VideoColumns.BUCKET_DISPLAY_NAME,
+			// MediaStore.Video.VideoColumns.CATEGORY,
+			MediaStore.Video.VideoColumns.DURATION,
+			MediaStore.Video.VideoColumns.RESOLUTION,
+			// MediaStore.Video.VideoColumns.MINI_THUMB_MAGIC,
+		};  
+		
+		Log.d(TAG, orderBy);
+		
+        // make managedQuery:
+		Activity activity = this.getActivity();
+		Cursor c = activity.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, where, null, orderBy);
+		
+		Log.d(TAG, "Media.videos query result count = " + c.getCount());
+        
+		
+		// formatting result
+		KrollDict result = new KrollDict(c.getCount());
+		HashMap<String, Object> obj = new HashMap<String, Object>();
+        
+		if (c.getCount() > 0) {
+    		c.moveToFirst();
+            
+			for (Integer i=0; !c.isAfterLast(); i++) {
+				
+				String _id = c.getString(c.getColumnIndex(MediaStore.Video.VideoColumns._ID));
+				String path = c.getString(c.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
+				Long dateTaken = c.getLong(c.getColumnIndex(MediaStore.Video.VideoColumns.DATE_TAKEN));
+				
+				// id, path, date_taken
+				obj.put("id", _id);
+				obj.put("path", path);
+				obj.put("size", c.getString(c.getColumnIndex(MediaStore.Video.VideoColumns.SIZE)));
+				obj.put("dateTaken", dateTaken);
+				// album info
+				obj.put("album_id", c.getString(c.getColumnIndex(MediaStore.Video.VideoColumns.BUCKET_ID)));
+				obj.put("album_name", c.getString(c.getColumnIndex(MediaStore.Video.VideoColumns.BUCKET_DISPLAY_NAME)));
+				// gps info
+				obj.put("lat", c.getFloat(c.getColumnIndex(MediaStore.Video.VideoColumns.LATITUDE)));
+				obj.put("lng", c.getFloat(c.getColumnIndex(MediaStore.Video.VideoColumns.LONGITUDE)));
+				// video
+				obj.put("title", c.getFloat(c.getColumnIndex(MediaStore.Video.VideoColumns.TITLE)));
+				obj.put("artist", c.getFloat(c.getColumnIndex(MediaStore.Video.VideoColumns.ARTIST)));
+				obj.put("duration", c.getFloat(c.getColumnIndex(MediaStore.Video.VideoColumns.DURATION)));
+				obj.put("resolution", c.getFloat(c.getColumnIndex(MediaStore.Video.VideoColumns.RESOLUTION)));
+				
+				// create thumbnail
+				Bitmap thumb = MediaStore.Video.Thumbnails.getThumbnail(activity.getContentResolver(), Long.parseLong(_id), MediaStore.Video.Thumbnails.MICRO_KIND, null);
+				TiBlob blob = TiBlob.blobFromImage(thumb);
+				
+				obj.put("thumbnail", blob);
+				obj.put("thumbnail_width", 96);
+				obj.put("thumbnail_height", 96);
+				
+				result.put(i.toString(), new KrollDict(obj)); //add the item
+				
+				c.moveToNext();
+			}
+		}
+		
+		c.close();
+		
+		return result;
+	}
 }
-

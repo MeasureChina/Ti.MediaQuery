@@ -23,13 +23,12 @@ function getVideos(page, perPage) {
 		});
 		
 		var info = Ti.UI.createLabel({
-			text: video.id + ') ' + video.path + "\n" + video.title,
+			text: video.id + ') ' + video.path,
 		});
 		row.add(info);
 		
 		var info1 = Ti.UI.createLabel({
 			text: "date - " + (new Date(video.dateTaken)).toString(),
-			// text: "date - " + photo.dateTaken,
 		});
 		row.add(info1);
 		

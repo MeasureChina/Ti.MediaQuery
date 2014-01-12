@@ -442,10 +442,8 @@ public class MediaqueryModule extends KrollModule
 			MediaStore.Video.VideoColumns.SIZE,
 			MediaStore.Video.VideoColumns.DATE_ADDED,
 			MediaStore.Video.VideoColumns.BUCKET_DISPLAY_NAME,
-			// MediaStore.Video.VideoColumns.CATEGORY,
 			MediaStore.Video.VideoColumns.DURATION,
 			MediaStore.Video.VideoColumns.RESOLUTION,
-			// MediaStore.Video.VideoColumns.MINI_THUMB_MAGIC,
 		};  
 		
 		Log.d(TAG, orderBy);
